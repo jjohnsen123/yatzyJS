@@ -47,9 +47,13 @@ label {
     width: 150px;
 }
 
-#sumLblId, #bonusLblId {
+#sumLblId, #bonusLblId, #totalLblId {
     float: right;
     width: 0px;
+}
+
+#sumInputId, #bonusInputId, #totalInputId {
+    float: right;
 }
 
 #sumLblId {
@@ -72,6 +76,12 @@ label {
     left: 40px;
 }
 
-#sumInputId, #bonusInputId {
-    float: right;
+#totalLblId {
+    position: relative;
+    left: -100px;
+}
+
+#totalInputId {
+    position: relative;
+    left: -6px;
 }

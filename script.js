@@ -35,6 +35,7 @@ function rollDice() {
     turn++;
     updateDiceDisplay();
     updateTurnDisplay();
+    inputArrUpdate();
 }
 
 const rollButton = document.getElementById("roll-button");
@@ -46,6 +47,7 @@ nameArr = ["One's", "Two's", "Three's", "Four's", "Five's", "Six's", "One pair",
 let buttomDiv = document.querySelector("#buttom");
 
 inputArr = [];
+
 let i = 0;
 for (let e of nameArr) {
     let div = document.createElement("div");
@@ -54,8 +56,7 @@ for (let e of nameArr) {
     lbl.innerHTML = e;
     let input = document.createElement("input");
     input.disabled = true;
-    input.dataset = e;
-    inputArr += input;
+    inputArr.push(input);
     buttomDiv.append(div);
     div.append(lbl);
     div.append(input);
@@ -65,17 +66,23 @@ let sumLbl;
 let sumInput;
 let bonusLbl;
 let bonusInput;
+let totalLbl;
+let totalInput;
 
-let sumFieldBonusFieldFunc = () => {
+let extraFieldFunc = () => {
+    let e = document.querySelector("#div5").children;
+    let n = document.querySelector("#div14").children;
+
+    // Sum
     sumLbl = document.createElement("label");
     sumLbl.innerHTML = "Sum:";
     sumLbl.id = "sumLblId";
     sumInput = document.createElement("input");
     sumInput.id = "sumInputId";
     sumInput.disabled = true;
-    let e = document.querySelector("#div5").children;
     document.querySelector("#div5").insertBefore(sumLbl, e[1].nextSibling);
     document.querySelector("#div5").insertBefore(sumInput, sumLbl.nextSibling);
+    // Bonus
     bonusLbl = document.createElement("label");
     bonusLbl.innerHTML = "Bonus:";
     bonusLbl.id = "bonusLblId";
@@ -84,6 +91,51 @@ let sumFieldBonusFieldFunc = () => {
     bonusInput.disabled = true;
     document.querySelector("#div5").insertBefore(bonusLbl, sumInput.nextSibling);
     document.querySelector("#div5").insertBefore(bonusInput, bonusLbl.nextSibling);
+    //Total
+    totalLbl = document.createElement("label");
+    totalLbl.innerHTML = "Total:";
+    totalLbl.id = "totalLblId";
+    totalInput = document.createElement("input");
+    totalInput.id = "totalInputId";
+    totalInput.disabled = true;
+    document.querySelector("#div14").insertBefore(totalLbl, n[1].nextSibling);
+    document.querySelector("#div14").insertBefore(totalInput, totalLbl.nextSibling);
 }
 
-sumFieldBonusFieldFunc();
+extraFieldFunc();
+
+let inputArrUpdate = () => {
+    calcCount();
+    oneToSixUpdate();
+    onePairUpdate();
+}
+
+let calcArr = [];
+let calcCount = () => {
+    calcArr = [];
+    for (let i = 0; i < diceValues.length; i++) {
+        calcArr[diceValues[i]]++;
+    }
+}
+
+let oneToSixUpdate = () => {
+    for (let i = 1; i <= 6; i++) {
+    let num = 0;
+    for (let e of diceValues) {
+        if(e == i) {
+            num += i;
+        }
+    }
+    inputArr[i-1].value = num;
+    }
+}
+
+let onePairUpdate = () => {
+    let num = 0;
+    for (let i = 1; i < calcArr.length; i++) {
+        if (calcArr[i] >= 2) {
+            num = 2 * i;
+        }
+    }
+    inputArr[6].value = num;
+}
