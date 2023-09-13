@@ -1,7 +1,6 @@
-div {
-    border: 1px solid rgb(213, 209, 209);
-    max-width: 500px;
-    gap: 10px;
+#buttom, #top {
+    border: 2px solid lightgray;
+    width: 450px;
 }
 
 #top {
@@ -36,4 +35,43 @@ div {
 .dice img {
     width: 100%;
     height: auto;
+}
+
+input {
+    display: inline-block;
+    width: 40px;
+}
+
+label {
+    float: left;
+    width: 150px;
+}
+
+#sumLblId, #bonusLblId {
+    float: right;
+    width: 0px;
+}
+
+#sumLblId {
+    position: relative;
+    left: -210px;
+}
+
+#sumInputId {
+    position: relative;
+    left: -120px;
+}
+
+#bonusLblId {
+    position: relative;
+    left: -60px;
+}
+
+#bonusInputId {
+    position: relative;
+    left: 40px;
+}
+
+#sumInputId, #bonusInputId {
+    float: right;
 }

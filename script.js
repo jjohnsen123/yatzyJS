@@ -1,11 +1,3 @@
-nameArr = ["One's", "Two's", "Three's", "Four's", "Five's", "Six's", "One pair", "Two pairs", "Three of a kind", "Four of a kind", "Full house", "Small straight", "Large straight", "Chance", "Yatzy"];
-
-for (let e of nameArr) {
-    let lbl = document.createElement("label");
-    let txtField = document.createElement("textfield");
-    lbl.innerHTML = e;
-}
-
 const diceImages = {
     1: "/images/1.png",
     2: "/images/2.png",
@@ -49,3 +41,49 @@ const rollButton = document.getElementById("roll-button");
 rollButton.addEventListener("click", rollDice);
 updateDiceDisplay();
 updateTurnDisplay();
+
+nameArr = ["One's", "Two's", "Three's", "Four's", "Five's", "Six's", "One pair", "Two pairs", "Three of a kind", "Four of a kind", "Full house", "Small straight", "Large straight", "Chance", "Yatzy"];
+let buttomDiv = document.querySelector("#buttom");
+
+inputArr = [];
+let i = 0;
+for (let e of nameArr) {
+    let div = document.createElement("div");
+    div.id = "div" + i++;
+    let lbl = document.createElement("label");
+    lbl.innerHTML = e;
+    let input = document.createElement("input");
+    input.disabled = true;
+    input.dataset = e;
+    inputArr += input;
+    buttomDiv.append(div);
+    div.append(lbl);
+    div.append(input);
+}
+
+let sumLbl;
+let sumInput;
+let bonusLbl;
+let bonusInput;
+
+let sumFieldBonusFieldFunc = () => {
+    sumLbl = document.createElement("label");
+    sumLbl.innerHTML = "Sum:";
+    sumLbl.id = "sumLblId";
+    sumInput = document.createElement("input");
+    sumInput.id = "sumInputId";
+    sumInput.disabled = true;
+    let e = document.querySelector("#div5").children;
+    document.querySelector("#div5").insertBefore(sumLbl, e[1].nextSibling);
+    document.querySelector("#div5").insertBefore(sumInput, sumLbl.nextSibling);
+    bonusLbl = document.createElement("label");
+    bonusLbl.innerHTML = "Bonus:";
+    bonusLbl.id = "bonusLblId";
+    bonusInput = document.createElement("input");
+    bonusInput.id = "bonusInputId";
+    bonusInput.disabled = true;
+    document.querySelector("#div5").insertBefore(bonusLbl, sumInput.nextSibling);
+    document.querySelector("#div5").insertBefore(bonusInput, bonusLbl.nextSibling);
+}
+
+sumFieldBonusFieldFunc();
