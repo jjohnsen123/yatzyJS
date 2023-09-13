@@ -1,3 +1,39 @@
 div {
-    border: 2px solid lightgray;
+    border: 1px solid rgb(213, 209, 209);
+    max-width: 500px;
+    gap: 10px;
+}
+
+#top {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 10px;
+}
+
+#turn-and-roll-container {
+    text-align: end;
+}
+
+#turn-container {
+    text-align: left;
+    max-width: 100px;
+}
+
+#roll-button {
+    font-size: 1.2em;
+}
+
+.dice-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+}
+
+.dice img {
+    width: 100%;
+    height: auto;
 }
