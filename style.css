@@ -1,4 +1,4 @@
-#buttom, #top {
+#bottom, #top {
     border: 2px solid lightgray;
     width: 450px;
 }
@@ -45,6 +45,10 @@ input {
 label {
     float: left;
     width: 150px;
+}
+
+.hold {
+    background-color: green;
 }
 
 #sumLblId, #bonusLblId, #totalLblId {

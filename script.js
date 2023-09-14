@@ -10,6 +10,9 @@ const diceImages = {
 let turn = 0;
 let rollNumber = 0;
 let diceValues = [1, 1, 1, 1, 1];
+let totalScore = 0;
+let sumTop = 0;
+let sumBottom = 0;
 
 function updateDiceDisplay() {
     for (let i = 0; i < 5; i++) {
@@ -36,7 +39,18 @@ function rollDice() {
     updateDiceDisplay();
     updateTurnDisplay();
     inputArrUpdate();
+    pressedOnOne = false;
 }
+
+let ScoreUpdate = (score, section) => {
+    if (section <= 5) {
+        sumInput.value = parseInt(sumInput.value) + parseInt(score);
+        checkForBonus();
+    }
+    totalInput.value = parseInt(totalInput.value) + parseInt(score);
+}
+
+
 
 const rollButton = document.getElementById("roll-button");
 rollButton.addEventListener("click", rollDice);
@@ -44,18 +58,34 @@ updateDiceDisplay();
 updateTurnDisplay();
 
 nameArr = ["One's", "Two's", "Three's", "Four's", "Five's", "Six's", "One pair", "Two pairs", "Three of a kind", "Four of a kind", "Full house", "Small straight", "Large straight", "Chance", "Yatzy"];
-let buttomDiv = document.querySelector("#buttom");
+let buttomDiv = document.querySelector("#bottom");
+
+let pressedOnOne;
+let getInput = (event) => {
+    if (event.currentTarget.className != 'hold' && turn > 0 && event.currentTarget.value > 0 && !pressedOnOne) {
+        event.currentTarget.className = 'hold';
+        pressedOnOne = true;
+        let number = event.currentTarget.parentNode.getAttribute('data-key-name');
+        if (number <= 5) {
+            ScoreUpdate(event.currentTarget.value, number);
+        } else {
+            ScoreUpdate(event.currentTarget.value, number);
+        }
+    }
+}
 
 inputArr = [];
 
 let i = 0;
 for (let e of nameArr) {
     let div = document.createElement("div");
-    div.id = "div" + i++;
+    div.dataset.keyName = i++;
     let lbl = document.createElement("label");
     lbl.innerHTML = e;
     let input = document.createElement("input");
-    input.disabled = true;
+    input.readOnly = true;
+    input.value = 0;
+    input.addEventListener('click', getInput);
     inputArr.push(input);
     buttomDiv.append(div);
     div.append(lbl);
@@ -70,8 +100,8 @@ let totalLbl;
 let totalInput;
 
 let extraFieldFunc = () => {
-    let e = document.querySelector("#div5").children;
-    let n = document.querySelector("#div14").children;
+    let e = document.querySelector('[data-key-name="5"]').children;
+    let n = document.querySelector('[data-key-name="14"]').children;
 
     // Sum
     sumLbl = document.createElement("label");
@@ -79,43 +109,63 @@ let extraFieldFunc = () => {
     sumLbl.id = "sumLblId";
     sumInput = document.createElement("input");
     sumInput.id = "sumInputId";
-    sumInput.disabled = true;
-    document.querySelector("#div5").insertBefore(sumLbl, e[1].nextSibling);
-    document.querySelector("#div5").insertBefore(sumInput, sumLbl.nextSibling);
+    sumInput.readOnly = true;
+    sumInput.value = 0;
+    document.querySelector('[data-key-name="5"]').insertBefore(sumLbl, e[1].nextSibling);
+    document.querySelector('[data-key-name="5"]').insertBefore(sumInput, sumLbl.nextSibling);
     // Bonus
     bonusLbl = document.createElement("label");
     bonusLbl.innerHTML = "Bonus:";
     bonusLbl.id = "bonusLblId";
     bonusInput = document.createElement("input");
     bonusInput.id = "bonusInputId";
-    bonusInput.disabled = true;
-    document.querySelector("#div5").insertBefore(bonusLbl, sumInput.nextSibling);
-    document.querySelector("#div5").insertBefore(bonusInput, bonusLbl.nextSibling);
+    bonusInput.readOnly = true;
+    bonusInput.value = 0;
+    document.querySelector('[data-key-name="5"]').insertBefore(bonusLbl, sumInput.nextSibling);
+    document.querySelector('[data-key-name="5"]').insertBefore(bonusInput, bonusLbl.nextSibling);
     //Total
     totalLbl = document.createElement("label");
     totalLbl.innerHTML = "Total:";
     totalLbl.id = "totalLblId";
     totalInput = document.createElement("input");
     totalInput.id = "totalInputId";
-    totalInput.disabled = true;
-    document.querySelector("#div14").insertBefore(totalLbl, n[1].nextSibling);
-    document.querySelector("#div14").insertBefore(totalInput, totalLbl.nextSibling);
+    totalInput.readOnly = true;
+    totalInput.value = 0;
+    document.querySelector('[data-key-name="14"]').insertBefore(totalLbl, n[1].nextSibling);
+    document.querySelector('[data-key-name="14"]').insertBefore(totalInput, totalLbl.nextSibling);
 }
 
 extraFieldFunc();
 
 let inputArrUpdate = () => {
-    calcCount();
     oneToSixUpdate();
     onePairUpdate();
+    twoPairUpdate();
+    threeSameUpdate();
+    fourSameUpdate();
+    fullHouseUpdate();
+    smallStraightUpdate();
+    largeStraightUpdate();
+    chanceUpdate();
+    yatzyUpdate();
 }
 
-let calcArr = [];
+let gottenBonus = false;
+let checkForBonus = () => {
+    let sum = parseInt(sumInput.value);
+    if (sum >= 63 && !gottenBonus) {
+        bonusInput.value = 50;
+        gottenBonus = true;
+        totalInput.value = parseInt(totalInput.value) + parseInt(50);
+    }
+}
+
 let calcCount = () => {
-    calcArr = [];
+    let calcArr = [0, 0, 0, 0, 0, 0, 0];
     for (let i = 0; i < diceValues.length; i++) {
         calcArr[diceValues[i]]++;
     }
+    return calcArr;
 }
 
 let oneToSixUpdate = () => {
@@ -132,10 +182,108 @@ let oneToSixUpdate = () => {
 
 let onePairUpdate = () => {
     let num = 0;
-    for (let i = 1; i < calcArr.length; i++) {
-        if (calcArr[i] >= 2) {
+    let tempArr = calcCount();
+    for (let i = 1; i < tempArr.length; i++) {
+        if (tempArr[i] >= 2) {
             num = 2 * i;
         }
     }
     inputArr[6].value = num;
+}
+
+let twoPairUpdate = () => {
+    let num = 0;
+    let tempArr = calcCount();
+    let count = 0;
+    for (let i = 1; i < tempArr.length; i++) {
+        if (tempArr[i] >= 2) {
+            num += 2 * i;
+            count++;
+        }
+    }
+    if (count < 2) {
+        num = 0;
+    }
+    inputArr[7].value = num;
+}
+
+let threeSameUpdate = () => {
+    let num = 0;
+    let tempArr = calcCount();
+    for (let i = 1; i < tempArr.length; i++) {
+        if (tempArr[i] >= 3) {
+            num = 3 * i;
+        }
+    }
+    inputArr[8].value = num;
+}
+
+let fourSameUpdate = () => {
+    let num = 0;
+    let tempArr = calcCount();
+    for (let i = 1; i < tempArr.length; i++) {
+        if (tempArr[i] >= 4) {
+            num = 4 * i;
+        }
+    }
+    inputArr[9].value = num;
+}
+
+let fullHouseUpdate = () => {
+    let num = 0;
+    let tempArr = calcCount();
+    let threeSame, twoSame = false;
+    for (let i = 1; i < tempArr.length; i++) {
+        if (tempArr[i] == 3 && !threeSame) {
+            num += 3 * i;
+            threeSame = true;
+        }
+        if (tempArr[i] == 2 && !twoSame) {
+            num += 2 * i;
+            twoSame = true;
+        }
+    }
+    if (!threeSame || !twoSame) {
+        num = 0;
+    }
+    inputArr[10].value = num;
+}
+
+let smallStraightUpdate = () => {
+    let num = 0;
+    let tempArr = calcCount();
+    if (tempArr[1] >= 1 && tempArr[2] >= 1 && tempArr[3] >= 1 && tempArr[4] >= 1 && tempArr[5] >= 1) {
+        num = 15;
+    }
+    inputArr[11].value = num;
+}
+
+let largeStraightUpdate = () => {
+    let num = 0;
+    let tempArr = calcCount();
+    if (tempArr[2] >= 1 && tempArr[3] >= 1 && tempArr[4] >= 1 && tempArr[5] >= 1 && tempArr[6] >= 1) {
+        num = 20;
+    }
+    inputArr[12].value = num;
+}
+
+let chanceUpdate = () => {
+    let num = 0;
+    let tempArr = calcCount();
+    for (let i = 1; i < tempArr.length; i++) {
+        num += tempArr[i] * i;
+    }
+    inputArr[13].value = num;
+}
+
+let yatzyUpdate = () => {
+    let num = 0;
+    let tempArr = calcCount();
+    for (let i = 1; i < tempArr.length; i++) {
+        if (tempArr[i] >= 5) {
+            num = 50;
+            break;
+        }
+    }
+    inputArr[14].value = num;
 }
