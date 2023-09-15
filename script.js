@@ -30,6 +30,11 @@ function updateTurnDisplay() {
     turnDisplay.textContent = `Turn: ${turn}`
 }
 
+function updateRollDisplay() {
+    const turnDisplay = document.getElementById(`roll-count`);
+    turnDisplay.textContent = `${rollsLeft}`
+}
+
 function rollDice() {
     if (rollsLeft > 0) {
         for (let i = 0; i < 5; i++) {
@@ -39,7 +44,7 @@ function rollDice() {
         }
         rollsLeft--;
         updateDiceDisplay();
-        updateTurnDisplay();
+        updateRollDisplay();
         inputArrUpdate();
         pressedOnOne = false;
     } else {
@@ -204,18 +209,21 @@ let calcCount = () => {
 
 let oneToSixUpdate = () => {
     for (let i = 1; i <= 6; i++) {
-    let num = 0;
-    for (let e of diceValues) {
-        if(e == i) {
-            num += i;
+        if (inputArr[i - 1].className != "hold") {
+            let num = 0;
+            for (let e of diceValues) {
+                if(e == i) {
+                    num += i;
+                }
+            }
+            inputArr[i - 1].value = num;
         }
-    }
-    inputArr[i-1].value = num;
     }
 }
 
 let onePairUpdate = () => {
-    let num = 0;
+    if (inputArr[6].className != "hold") {
+        let num = 0;
     let tempArr = calcCount();
     for (let i = 1; i < tempArr.length; i++) {
         if (tempArr[i] >= 2) {
@@ -223,10 +231,12 @@ let onePairUpdate = () => {
         }
     }
     inputArr[6].value = num;
+    }
 }
 
 let twoPairUpdate = () => {
-    let num = 0;
+    if (inputArr[7].className != "hold") {
+        let num = 0;
     let tempArr = calcCount();
     let count = 0;
     for (let i = 1; i < tempArr.length; i++) {
@@ -239,85 +249,100 @@ let twoPairUpdate = () => {
         num = 0;
     }
     inputArr[7].value = num;
+    }
 }
 
 let threeSameUpdate = () => {
-    let num = 0;
-    let tempArr = calcCount();
-    for (let i = 1; i < tempArr.length; i++) {
-        if (tempArr[i] >= 3) {
-            num = 3 * i;
+    if (inputArr[8].className != "hold") {
+        let num = 0;
+        let tempArr = calcCount();
+        for (let i = 1; i < tempArr.length; i++) {
+            if (tempArr[i] >= 3) {
+                num = 3 * i;
+            }
         }
+    inputArr[8].value = num;   
     }
-    inputArr[8].value = num;
 }
 
 let fourSameUpdate = () => {
-    let num = 0;
-    let tempArr = calcCount();
-    for (let i = 1; i < tempArr.length; i++) {
-        if (tempArr[i] >= 4) {
-            num = 4 * i;
+    if (inputArr[9].className != "hold") {
+        let num = 0;
+        let tempArr = calcCount();
+        for (let i = 1; i < tempArr.length; i++) {
+            if (tempArr[i] >= 4) {
+                num = 4 * i;
+            }
         }
+        inputArr[9].value = num;   
     }
-    inputArr[9].value = num;
 }
 
 let fullHouseUpdate = () => {
-    let num = 0;
-    let tempArr = calcCount();
-    let threeSame, twoSame = false;
-    for (let i = 1; i < tempArr.length; i++) {
-        if (tempArr[i] == 3 && !threeSame) {
-            num += 3 * i;
-            threeSame = true;
+    if (inputArr[10].className != "hold") {
+        let num = 0;
+        let tempArr = calcCount();
+        let threeSame, twoSame = false;
+        for (let i = 1; i < tempArr.length; i++) {
+            if (tempArr[i] == 3 && !threeSame) {
+                num += 3 * i;
+                threeSame = true;
+            }
+            if (tempArr[i] == 2 && !twoSame) {
+                num += 2 * i;
+                twoSame = true;
+            }
         }
-        if (tempArr[i] == 2 && !twoSame) {
-            num += 2 * i;
-            twoSame = true;
+        if (!threeSame || !twoSame) {
+            num = 0;
         }
+        inputArr[10].value = num;   
     }
-    if (!threeSame || !twoSame) {
-        num = 0;
-    }
-    inputArr[10].value = num;
 }
 
 let smallStraightUpdate = () => {
-    let num = 0;
-    let tempArr = calcCount();
-    if (tempArr[1] >= 1 && tempArr[2] >= 1 && tempArr[3] >= 1 && tempArr[4] >= 1 && tempArr[5] >= 1) {
-        num = 15;
+    if (inputArr[11].className != "hold") {
+        let num = 0;
+        let tempArr = calcCount();
+        if (tempArr[1] >= 1 && tempArr[2] >= 1 && tempArr[3] >= 1 && tempArr[4] >= 1 && tempArr[5] >= 1) {
+            num = 15;
+        }
+        inputArr[11].value = num;   
     }
-    inputArr[11].value = num;
 }
 
 let largeStraightUpdate = () => {
-    let num = 0;
-    let tempArr = calcCount();
-    if (tempArr[2] >= 1 && tempArr[3] >= 1 && tempArr[4] >= 1 && tempArr[5] >= 1 && tempArr[6] >= 1) {
-        num = 20;
+    if (inputArr[12].className != "hold") {
+        let num = 0;
+        let tempArr = calcCount();
+        if (tempArr[2] >= 1 && tempArr[3] >= 1 && tempArr[4] >= 1 && tempArr[5] >= 1 && tempArr[6] >= 1) {
+            num = 20;
+        }
+        inputArr[12].value = num;   
     }
-    inputArr[12].value = num;
 }
 
 let chanceUpdate = () => {
-    let num = 0;
-    let tempArr = calcCount();
-    for (let i = 1; i < tempArr.length; i++) {
-        num += tempArr[i] * i;
+    if (inputArr[13].className != "hold") {
+        let num = 0;
+        let tempArr = calcCount();
+        for (let i = 1; i < tempArr.length; i++) {
+            num += tempArr[i] * i;
+        }
+        inputArr[13].value = num;   
     }
-    inputArr[13].value = num;
 }
 
 let yatzyUpdate = () => {
-    let num = 0;
-    let tempArr = calcCount();
-    for (let i = 1; i < tempArr.length; i++) {
-        if (tempArr[i] >= 5) {
-            num = 50;
-            break;
+    if (inputArr[14].className != "hold") {
+        let num = 0;
+        let tempArr = calcCount();
+        for (let i = 1; i < tempArr.length; i++) {
+            if (tempArr[i] >= 5) {
+                num = 50;
+                break;
+            }
         }
+        inputArr[14].value = num;   
     }
-    inputArr[14].value = num;
 }
