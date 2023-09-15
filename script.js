@@ -93,9 +93,12 @@ let buttomDiv = document.querySelector("#bottom");
 
 let pressedOnOne;
 let getInput = (event) => {
-    if (event.currentTarget.className != 'hold' && turn > 0 && event.currentTarget.value > 0 && !pressedOnOne) {
+    if (event.currentTarget.className != 'hold' && rollsLeft < 3 && event.currentTarget.value > 0 && !pressedOnOne) {
         event.currentTarget.className = 'hold';
         pressedOnOne = true;
+        turn++;
+        updateTurnDisplay();
+        rollsLeft = 3;
         let number = event.currentTarget.parentNode.getAttribute('data-key-name');
         if (number <= 5) {
             ScoreUpdate(event.currentTarget.value, number);
