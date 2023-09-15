@@ -69,7 +69,14 @@ for (let i = 0; i < 5; i++) {
     });
 }
 
-
+function resetHoldDice() {
+    heldDice = [false, false, false, false, false];
+    
+    for (let i = 0; i < 5; i++) {
+        const diceElement = document.getElementById(`dice${i + 1}`);
+        diceElement.classList.remove("hold");
+    }
+}
 
 let ScoreUpdate = (score, section) => {
     if (section <= 5) {
@@ -104,6 +111,7 @@ let getInput = (event) => {
         turn++;
         updateTurnDisplay();
         rollsLeft = 3;
+        resetHoldDice();
         let number = event.currentTarget.parentNode.getAttribute('data-key-name');
         if (number <= 5) {
             ScoreUpdate(event.currentTarget.value, number);
