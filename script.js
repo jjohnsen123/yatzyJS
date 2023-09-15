@@ -8,8 +8,9 @@ const diceImages = {
 };
 
 let turn = 0;
-let rollNumber = 0;
+let rollsLeft = 3;
 let diceValues = [1, 1, 1, 1, 1];
+let heldDice = [false, false, false, false, false]
 let totalScore = 0;
 let sumTop = 0;
 let sumBottom = 0;
@@ -30,17 +31,40 @@ function updateTurnDisplay() {
 }
 
 function rollDice() {
-    for (let i = 0; i < 5; i++) {
-        diceValues[i] = Math.floor(Math.random() * 6) + 1;
-
+    if (rollsLeft > 0) {
+        for (let i = 0; i < 5; i++) {
+            if (!heldDice[i]) {
+                diceValues[i] = Math.floor(Math.random() * 6) + 1;
+            }
+        }
+        rollsLeft--;
+        updateDiceDisplay();
+        updateTurnDisplay();
+        inputArrUpdate();
+        pressedOnOne = false;
+    } else {
+        // TODO
     }
-    rollNumber++;
-    turn++;
-    updateDiceDisplay();
-    updateTurnDisplay();
-    inputArrUpdate();
-    pressedOnOne = false;
 }
+
+function toggleHoldDie(index) {
+    heldDice[index] = !heldDice[index];
+    const diceElement = document.getElementById(`dice${index + 1}`);
+    if (heldDice[index]) {
+        diceElement.classList.add("hold");
+    } else {
+        diceElement.classList.remove("hold");
+    }
+}
+
+for (let i = 0; i < 5; i++) {
+    const diceElement = document.getElementById(`dice${i + 1}`);
+    diceElement.addEventListener("click", () => {
+        toggleHoldDie(i);
+    });
+}
+
+
 
 let ScoreUpdate = (score, section) => {
     if (section <= 5) {
@@ -53,7 +77,14 @@ let ScoreUpdate = (score, section) => {
 
 
 const rollButton = document.getElementById("roll-button");
-rollButton.addEventListener("click", rollDice);
+rollButton.addEventListener("click", () => {
+    if (rollsLeft > 0) {
+        rollDice();
+    } else {
+        // TODO
+    }
+});
+
 updateDiceDisplay();
 updateTurnDisplay();
 
