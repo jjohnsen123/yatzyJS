@@ -231,7 +231,7 @@ let oneToSixUpdate = () => {
 
 let onePairUpdate = () => {
     if (inputArr[6].className != "hold") {
-        let num = 0;
+    let num = 0;
     let tempArr = calcCount();
     for (let i = 1; i < tempArr.length; i++) {
         if (tempArr[i] >= 2) {
